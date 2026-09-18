@@ -18,3 +18,43 @@ The data is publicly provided by CVM (Comissão de Valores Mobiliários).
 * **Feature Engineering:** Calculating percentage variation year-over-year using lagged values.
 * **Outlier Handling:** Removing statistically extreme variations (>-200% or <200%) to avoid skewed sectoral means.
 * **Data Visualization:** Bar charts plotting the average revenue and profit variation by economic sector.
+
+Project Structure
+
+CVM - Project/
+├── data/
+│   ├── CVM registration data.csv
+│   └── CVM Result.csv
+├── src/
+│   └── Script CVM.py
+├── .gitignore
+├── Makefile
+├── README.md
+└── requirements.txt
+
+
+How to Run (using Makefile)
+
+This project includes a Makefile to automate the environment setup, script execution, and cleanup processes. Make sure you have python3 and make installed on your system.
+
+1. Setup Environment
+
+To create a virtual environment (venv) and install all required dependencies (from requirements.txt), run the following command in your terminal:
+
+make setup
+
+
+2. Run the Analysis
+
+To execute the data analysis script using the virtual environment, run:
+
+make run
+
+
+This will process the data and generate the final visualizations.
+
+3. Clean Project
+
+If you want to remove the virtual environment and all generated cache files (__pycache__), run:
+
+make clean
