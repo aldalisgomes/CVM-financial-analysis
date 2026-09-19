@@ -8,10 +8,11 @@ SCRIPT = "src/Script CVM.py"
 
 setup:
 	python3 -m venv $(VENV)
-	$(PIP) install --upgrade pip$(PIP) install -r requirements.txt
+	$(PIP) install --upgrade pip
+	$(PIP) install -r requirements.txt
 
 run:
-	$(PYTHON)$(SCRIPT)
+	$(PYTHON) $(SCRIPT)
 
 clean:
 	rm -rf $(VENV)
