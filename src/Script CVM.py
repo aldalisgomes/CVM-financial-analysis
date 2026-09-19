@@ -131,13 +131,16 @@ sns.barplot(data=sector_summary, y='SETOR_ATIV', x='VARIATION', hue='CD_CONTA')
 # 1. Guarda o gráfico em ficheiro na raiz do projeto
 image_path = 'cvm_sector_analysis.png'
 plt.savefig(image_path, bbox_inches='tight', dpi=300)
+plt.close()
 
 # 2. Tenta abrir a imagem automaticamente no ecrã
-import os, platform
+import os, platform, subprocess
 
 try:
     if 'microsoft' in platform.release().lower():  # WSL (Windows)
-        os.system(f'explorer.exe {image_path}')
+        # Converte o caminho do Linux para o formato reconhecido pelo Windows
+        win_path = subprocess.check_output(['wslpath', '-w', image_path]).decode().strip()
+        os.system(f'cmd.exe /c start "" "{win_path}"')
     elif platform.system() == 'Windows':
         os.system(f'start {image_path}')
     elif platform.system() == 'Darwin':  # macOS
@@ -145,6 +148,6 @@ try:
     else:
         plt.show()  # Linux nativo com GUI
 except Exception:
-    plt.show()
+    pass
 
 # %% END
