@@ -122,9 +122,29 @@ sector_summary = (sector_summary
 .merge(selected_sector_count, how='left', on='SETOR_ATIV')
 .query('~COUNT.isna()'))
 
-# Visualizing graphically
+#-------------------Teste 1
+
+# Visualização gráfica
 plt.figure(figsize=(18,12), dpi=600)
 sns.barplot(data=sector_summary, y='SETOR_ATIV', x='VARIATION', hue='CD_CONTA')
-plt.show()
+
+# 1. Guarda o gráfico em ficheiro na raiz do projeto
+image_path = 'cvm_sector_analysis.png'
+plt.savefig(image_path, bbox_inches='tight', dpi=300)
+
+# 2. Tenta abrir a imagem automaticamente no ecrã
+import os, platform
+
+try:
+    if 'microsoft' in platform.release().lower():  # WSL (Windows)
+        os.system(f'cmd.exe /c start {image_path} 2>/dev/null')
+    elif platform.system() == 'Windows':
+        os.system(f'start {image_path}')
+    elif platform.system() == 'Darwin':  # macOS
+        os.system(f'open {image_path}')
+    else:
+        plt.show()  # Linux nativo com GUI
+except Exception:
+    plt.show()
 
 # %% END
