@@ -1,59 +1,66 @@
 # CVM Financial Data Analysis
 
-## About the Project
 This repository contains an exploratory data analysis (EDA) script focused on the financial performance of public companies registered with the Brazilian Securities and Exchange Commission (CVM). The objective is to analyze the annual percentage variation in corporate revenues and profits across different economic sectors.
 
-## Dataset
-The data is publicly provided by CVM (Comissão de Valores Mobiliários). 
-* **CVM Result.csv**: Contains the financial results (Revenue and Profit/Loss).
-* **CVM registration data.csv**: Contains the corporate registration details, including the economic sector of each company.
+## Repository Structure
 
-*Note: Ensure these datasets are placed inside the `data/` directory as shown in the project structure below.*
+* `data/`: Directory containing the datasets (`CVM registration data.csv` and `CVM Result.csv`).
+* `src/`: Directory containing the Python scripts.
+  * `Script CVM.py`: Main script for data cleaning, merging, feature engineering, and visualization.
+* `Makefile`: Automates the environment setup and data pipeline execution.
+* `requirements.txt`: Lists Python dependencies required for the project.
+* `.gitignore`: Specifies intentionally untracked files to ignore.
 
-## Tech Stack
-* Python
-* Pandas & NumPy (Data manipulation and cleaning)
-* Seaborn & Matplotlib (Data visualization)
+## Requirements
 
-## Features
-* **Data Cleaning:** Filtering specific accounting codes, handling missing values, and removing report duplicates.
-* **Feature Engineering:** Calculating percentage variation year-over-year using lagged values.
-* **Outlier Handling:** Removing statistically extreme variations (>-200% or <200%) to avoid skewed sectoral means.
-* **Data Visualization:** Bar charts plotting the average revenue and profit variation by economic sector.
+* Python 3.x
+* pandas
+* numpy
+* seaborn
+* matplotlib
 
-## Project Structure
-```text
-CVM - Project/
-├── data/
-│   ├── CVM registration data.csv
-│   └── CVM Result.csv
-├── src/
-│   └── Script CVM.py
-├── .gitignore
-├── Makefile
-├── README.md
-└── requirements.txt
+## How to Run
+
+**Note for Windows Users:** The Makefile commands are designed for Unix environments (Linux/macOS). If you are on Windows, please use Git Bash or WSL to run the pipeline.
+
+**1. Clone the repository and access the folder**
+```bash
+git clone https://github.com/aldalisgomes/CVM-financial-analysis.git
+cd CVM-financial-analysis
 ```
 
-## How to Run (using Makefile)
+**2. Create and activate the virtual environment (Required on newer Debian/Ubuntu-based systems, such as WSL)**
+```bash
+python3 -m venv venv
+source venv/bin/activate
+```
 
-This project includes a `Makefile` to automate the environment setup, script execution, and cleanup processes. Make sure you have `python3` and `make` installed on your system.
-
-### 1. Setup Environment
-To create a virtual environment (`venv`) and install all required dependencies (from `requirements.txt`), run the following command in your terminal:
+**3. Install dependencies and run the pipeline**
 ```bash
 make setup
-```
-
-### 2. Run the Analysis
-To execute the data analysis script using the virtual environment, run:
-```bash
 make run
 ```
-*This will process the data and generate the final visualizations.*
 
-### 3. Clean Project
-If you want to remove the virtual environment and all generated cache files (`__pycache__`), run:
+## Alternative for Windows (Or No Make Installed)
+
+If you are using standard Git Bash, PowerShell, or Command Prompt without `make` installed, you can simply run the Python script directly after activating your virtual environment:
+
+**Install dependencies:**
 ```bash
-make clean
+pip install -r requirements.txt
 ```
+
+**Run the analysis script:**
+*(Note: Use quotes around the script name because it contains a space)*
+```bash
+python "src/Script CVM.py"
+```
+
+## Data Pipeline Details
+
+* **Data Import & Merging:** Reads CVM financial results and registration datasets with latin1 encoding and merges them by company code to include economic sectors.
+* **Filtering:** Isolates specific accounting codes for Revenue (3.01) and Profit/Loss (3.11).
+* **Cleaning:** Removes duplicate report versions and handles missing values to ensure data integrity.
+* **Feature Engineering:** Calculates the year-over-year percentage variation using lagged financial values.
+* **Outlier Handling:** Excludes statistically extreme variations (greater than 200% or less than -200%) to avoid skewed sectoral means.
+* **Data Visualization:** Generates bar charts plotting the average revenue and profit variation by economic sector, filtering out sectors with insufficient observations to ensure statistical relevance.
