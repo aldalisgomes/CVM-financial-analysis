@@ -137,7 +137,7 @@ import os, platform
 
 try:
     if 'microsoft' in platform.release().lower():  # WSL (Windows)
-        os.system(f'cmd.exe /c start {image_path} 2>/dev/null')
+        os.system(f'explorer.exe {image_path}')
     elif platform.system() == 'Windows':
         os.system(f'start {image_path}')
     elif platform.system() == 'Darwin':  # macOS
