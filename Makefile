@@ -18,3 +18,4 @@ clean:
 	rm -rf $(VENV)
 	rm -rf __pycache__
 	rm -rf src/__pycache__
+	rm -rf resultados

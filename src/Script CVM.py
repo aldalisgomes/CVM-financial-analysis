@@ -128,26 +128,39 @@ sector_summary = (sector_summary
 plt.figure(figsize=(18,12), dpi=600)
 sns.barplot(data=sector_summary, y='SETOR_ATIV', x='VARIATION', hue='CD_CONTA')
 
-# 1. Guarda o gráfico em ficheiro na raiz do projeto
-image_path = 'cvm_sector_analysis.png'
+import os, platform, subprocess
+
+# 1. Cria UMA NOVA PASTA na raiz do projeto
+pasta_destino = 'resultados'
+os.makedirs(pasta_destino, exist_ok=True)
+
+# 2. Guarda o gráfico dentro da nova pasta
+image_path = os.path.join(pasta_destino, 'cvm_sector_analysis.png')
 plt.savefig(image_path, bbox_inches='tight', dpi=300)
 plt.close()
 
-# 2. Tenta abrir a imagem automaticamente no ecrã
-import os, platform, subprocess
-
+# 3. Abre automaticamente a NOVA PASTA e o arquivo no Windows a partir do WSL
 try:
     if 'microsoft' in platform.release().lower():  # WSL (Windows)
-        # Converte o caminho do Linux para o formato reconhecido pelo Windows
-        win_path = subprocess.check_output(['wslpath', '-w', image_path]).decode().strip()
-        os.system(f'cmd.exe /c start "" "{win_path}"')
+        # Converte os caminhos do Linux (WSL) para o formato nativo do Windows
+        win_dir = subprocess.check_output(['wslpath', '-w', pasta_destino]).decode().strip()
+        win_img = subprocess.check_output(['wslpath', '-w', image_path]).decode().strip()
+        
+        # Abre a nova pasta diretamente no Windows Explorer
+        os.system(f'explorer.exe "{win_dir}"')
+        
+        # Abre a imagem automaticamente no navegador/visualizador padrão do Windows
+        os.system(f'cmd.exe /c start "" "{win_img}"')
+        
     elif platform.system() == 'Windows':
-        os.system(f'start {image_path}')
+        os.system(f'explorer "{pasta_destino}"')
+        os.system(f'start "" "{image_path}"')
     elif platform.system() == 'Darwin':  # macOS
-        os.system(f'open {image_path}')
+        os.system(f'open "{pasta_destino}"')
+        os.system(f'open "{image_path}"')
     else:
-        plt.show()  # Linux nativo com GUI
-except Exception:
-    pass
+        plt.show()  
+except Exception as e:
+    print(f"Não foi possível abrir automaticamente: {e}")
 
 # %% END
