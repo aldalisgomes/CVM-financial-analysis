@@ -122,44 +122,44 @@ sector_summary = (sector_summary
 .merge(selected_sector_count, how='left', on='SETOR_ATIV')
 .query('~COUNT.isna()'))
 
-#-------------------Teste 1
-# Visualização gráfica
+#-------------------
+# Graphical visualization
 plt.figure(figsize=(18,12), dpi=600)
 sns.barplot(data=sector_summary, y='SETOR_ATIV', x='VARIATION', hue='CD_CONTA')
 
 import os, platform, subprocess
 
-# 1. Cria UMA NOVA PASTA na raiz do projeto
-pasta_destino = 'resultados'
-os.makedirs(pasta_destino, exist_ok=True)
+# 1. Create A NEW FOLDER in the project root
+destination_folder = 'results'
+os.makedirs(destination_folder, exist_ok=True)
 
-# 2. Guarda o gráfico dentro da nova pasta
-image_path = os.path.join(pasta_destino, 'cvm_sector_analysis.png')
+# 2. Save the plot inside the new folder
+image_path = os.path.join(destination_folder, 'cvm_sector_analysis.png')
 plt.savefig(image_path, bbox_inches='tight', dpi=300)
 plt.close()
 
-# 3. Abre automaticamente a NOVA PASTA e o ficheiro
+# 3. Automatically open the NEW FOLDER and the file
 try:
     if 'microsoft' in platform.release().lower():  # WSL (Windows)
-        # Converte os caminhos do Linux (WSL) para o formato nativo do Windows
-        win_dir = subprocess.check_output(['wslpath', '-w', pasta_destino]).decode().strip()
+        # Convert Linux (WSL) paths to native Windows format
+        win_dir = subprocess.check_output(['wslpath', '-w', destination_folder]).decode().strip()
         win_img = subprocess.check_output(['wslpath', '-w', image_path]).decode().strip()
         
-        # Utiliza subprocess.run para evitar que a shell do Linux omita as barras invertidas (\)
+        # Use subprocess.run to prevent the Linux shell from omitting backslashes (\)
         subprocess.run(['explorer.exe', win_dir])
         
-        # Utiliza o PowerShell para abrir a imagem, contornando o erro de caminhos UNC do CMD
+        # Use PowerShell to open the image, bypassing the CMD UNC paths error
         subprocess.run(['powershell.exe', '-Command', f"Invoke-Item -LiteralPath '{win_img}'"])
         
     elif platform.system() == 'Windows':
-        subprocess.run(['explorer', pasta_destino])
+        subprocess.run(['explorer', destination_folder])
         subprocess.run(['powershell.exe', '-Command', f"Invoke-Item -LiteralPath '{image_path}'"])
     elif platform.system() == 'Darwin':  # macOS
-        subprocess.run(['open', pasta_destino])
+        subprocess.run(['open', destination_folder])
         subprocess.run(['open', image_path])
     else:
         plt.show()  
 except Exception as e:
-    print(f"Não foi possível abrir automaticamente: {e}")
+    print(f"Could not open automatically: {e}")
 
 # %% END
