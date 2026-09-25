@@ -123,7 +123,6 @@ sector_summary = (sector_summary
 .query('~COUNT.isna()'))
 
 #-------------------Teste 1
-
 # Visualização gráfica
 plt.figure(figsize=(18,12), dpi=600)
 sns.barplot(data=sector_summary, y='SETOR_ATIV', x='VARIATION', hue='CD_CONTA')
@@ -139,25 +138,25 @@ image_path = os.path.join(pasta_destino, 'cvm_sector_analysis.png')
 plt.savefig(image_path, bbox_inches='tight', dpi=300)
 plt.close()
 
-# 3. Abre automaticamente a NOVA PASTA e o arquivo no Windows a partir do WSL
+# 3. Abre automaticamente a NOVA PASTA e o ficheiro
 try:
     if 'microsoft' in platform.release().lower():  # WSL (Windows)
         # Converte os caminhos do Linux (WSL) para o formato nativo do Windows
         win_dir = subprocess.check_output(['wslpath', '-w', pasta_destino]).decode().strip()
         win_img = subprocess.check_output(['wslpath', '-w', image_path]).decode().strip()
         
-        # Abre a nova pasta diretamente no Windows Explorer
-        os.system(f'explorer.exe "{win_dir}"')
+        # Utiliza subprocess.run para evitar que a shell do Linux omita as barras invertidas (\)
+        subprocess.run(['explorer.exe', win_dir])
         
-        # Abre a imagem automaticamente no navegador/visualizador padrão do Windows
-        os.system(f'cmd.exe /c start "" "{win_img}"')
+        # Utiliza o PowerShell para abrir a imagem, contornando o erro de caminhos UNC do CMD
+        subprocess.run(['powershell.exe', '-Command', f"Invoke-Item -LiteralPath '{win_img}'"])
         
     elif platform.system() == 'Windows':
-        os.system(f'explorer "{pasta_destino}"')
-        os.system(f'start "" "{image_path}"')
+        subprocess.run(['explorer', pasta_destino])
+        subprocess.run(['powershell.exe', '-Command', f"Invoke-Item -LiteralPath '{image_path}'"])
     elif platform.system() == 'Darwin':  # macOS
-        os.system(f'open "{pasta_destino}"')
-        os.system(f'open "{image_path}"')
+        subprocess.run(['open', pasta_destino])
+        subprocess.run(['open', image_path])
     else:
         plt.show()  
 except Exception as e:
